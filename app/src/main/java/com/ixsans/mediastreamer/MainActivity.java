@@ -3,10 +3,12 @@ package com.ixsans.mediastreamer;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import net.majorkernelpanic.streaming.Session;
 import net.majorkernelpanic.streaming.SessionBuilder;
@@ -19,7 +21,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity  implements RtspClient.Callback,
         Session.Callback, SurfaceHolder.Callback{
-
+    FloatingActionButton fab;
     // log tag
     public final static String TAG = MainActivity.class.getSimpleName();
 
@@ -42,9 +44,15 @@ public class MainActivity extends AppCompatActivity  implements RtspClient.Callb
         mSurfaceView = (SurfaceView) findViewById(R.id.surface);
 
         mSurfaceView.getHolder().addCallback(this);
-
-        // Initialize RTSP client
         initRtspClient();
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleStreaming();
+            }
+        });
+
 
     }
 
@@ -52,7 +60,7 @@ public class MainActivity extends AppCompatActivity  implements RtspClient.Callb
     protected void onResume() {
         super.onResume();
 
-        toggleStreaming();
+
     }
 
     @Override
@@ -100,6 +108,10 @@ public class MainActivity extends AppCompatActivity  implements RtspClient.Callb
 
             // Start video stream
             mClient.startStream();
+
+
+            fab.setImageResource(R.drawable.ic_pause);
+
         } else {
             // already streaming, stop streaming
             // stop camera preview
@@ -107,6 +119,7 @@ public class MainActivity extends AppCompatActivity  implements RtspClient.Callb
 
             // stop streaming
             mClient.stopStream();
+            fab.setImageResource(R.drawable.ic_play);
         }
     }
 
